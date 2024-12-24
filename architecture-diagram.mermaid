@@ -1,0 +1,32 @@
+C4Component
+    title Component diagram for Internship Response System
+
+    Container_Boundary(spa, "Single Page Application") {
+        Component(ui, "UI Components", "React", "Компоненты интерфейса для отображения откликов")
+        Component(state, "State Management", "Redux", "Управление состоянием приложения")
+    }
+
+    Container_Boundary(api, "API Application") {
+        Component(controller, "API Controllers", "Spring REST", "Обработка HTTP запросов")
+        Component(service, "Business Logic", "Spring Service", "Бизнес-логика приложения")
+        Component(repo, "Data Access", "Spring Data JPA", "Доступ к данным")
+        Component(auth, "Auth Service", "Spring Security", "Аутентификация и авторизация")
+        Component(image, "Image Service", "Spring Service", "Управление изображениями")
+    }
+
+    Container_Boundary(storage, "Data Storage") {
+        ContainerDb(db, "PostgreSQL", "Database", "Хранение данных о пользователях, откликах и компаниях")
+        ContainerDb(s3, "S3 Compatible Storage", "MinIO", "Хранение логотипов компаний")
+    }
+
+    System_Ext(sendgrid, "SendGrid", "Email Service", "Отправка уведомлений")
+
+    Rel(ui, controller, "Использует", "REST/HTTPS")
+    Rel(ui, state, "Обновляет", "Internal")
+    Rel(controller, auth, "Проверяет", "Internal")
+    Rel(controller, service, "Вызывает", "Internal")
+    Rel(service, repo, "Использует", "Internal")
+    Rel(service, image, "Использует", "Internal")
+    Rel(repo, db, "Читает/Пишет", "JDBC")
+    Rel(image, s3, "Хранит", "S3 API/HTTPS")
+    Rel(service, sendgrid, "Отправляет", "REST/HTTPS")
